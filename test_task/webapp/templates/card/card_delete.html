@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block menu %}
+<li><a href="{% url 'webapp:card_list' %}">Cards</a></li>       
+{% endblock %}
+{% block content %}
+<h1>Are you sure about deletion of this card holder?</h1>
+<form method="POST" action="{% url 'webapp:card_delete' card.pk %}">
+    {% csrf_token %}
+        <p><input type="submit" value="Confirm"></p>
+        <p><a href="{% url 'webapp:card_list' %}">Cancel</a></p>
+</form>
+{% endblock %}

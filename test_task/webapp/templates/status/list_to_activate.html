@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if not cards %}
+<h1>Список пуст</h1>
+{% endif %}
+{% for card in cards %}
+<br>
+<div id="{{ card.id }}" class="card bg-secondary" style="width: 18rem;">
+  <div class="card-body">
+    <h5 class="card-title">{{ card.card_owner }}</h5>
+    <p class="card-text">{{ card.card_number }}</p>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">{{ card.card_status }}</li>
+  </ul>
+  <div class="card-body">
+    <a href="{% url 'webapp:card_owner' card.id %}" class="card-link text-light bg-dark">View</a>
+    <button type="button" onclick="Activate(event)" data-url="{% url 'api:success_activated' %}" data-card="{{ card.id }}">Подтвердить</button>
+    <button type="button" onclick="RejectCard(event)" data-url="{% url 'api:reject_deactivated' %}" data-card="{{ card.id }}">Отклонить</button>
+  </div>
+</div>
+{% endfor %}
+
+<script>
+    function getCookie(name) {
+          if (!document.cookie) {
+            return null;
+          }
+          const xsrfCookies = document.cookie.split(';')
+            .map(c => c.trim())
+            .filter(c => c.startsWith(name + '='));
+    
+          if (xsrfCookies.length === 0) {
+            return null;
+          }
+          return decodeURIComponent(xsrfCookies[0].split('=')[1]);
+        }
+    
+        async function Activate(event) {
+        event.preventDefault()
+        let button = event.target
+        const csrfToken = getCookie('csrftoken');
+        const headers = new Headers({
+          'Content-Type': 'x-www-form-urlencoded',
+           'X-CSRFToken' : csrfToken
+           });
+        let url = button.dataset.url
+        let card_id = button.dataset.card
+        let given_obj = document.getElementById(`${card_id}`)
+        let response = await fetch(url, {method: 'POST', headers, body: JSON.stringify({'id': card_id})})
+        }
+    
+        async function RejectCard(event) {
+        event.preventDefault()
+          const csrfToken = getCookie('csrftoken');
+        const headers = new Headers({
+          'Content-Type': 'x-www-form-urlencoded',
+           'X-CSRFToken' : csrfToken
+           });
+        let button = event.target
+        let url = button.dataset.url
+        let card_id = button.dataset.card
+          let given_obj = document.getElementById(`${card_id}`)
+          let response = await fetch(url, {method: 'POST', headers, body: JSON.stringify({'id': card_id})})
+          given_obj.remove()
+        }
+    
+    </script>
+    {% endblock %}

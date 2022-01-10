@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+<body>
+    {% block menu %}  
+    {% endblock %}
+    {% block content %}
+    <div class="container">
+    <h1>Card Holders List</h1>
+        {% if not cards %}
+            <h2>There is no card holders that you are looking for</h2>
+        {% else %}
+            {% include "partial/search.html" %}
+        {% endif %}
+        {% for card in cards %}
+        <div class="card mb-2" style="width: 18rem;">
+            <div class="card-body mb-2">
+            <h5 class="card-title">Name: {{ card.card_owner }}</h5>  
+            <p class="card-text">{{ card.card_number }}</p>
+            <p class="card-text">{{ card.card_status }}</p>  
+            <a href="{% url 'webapp:card_delete' card.pk %}"><img src="https://img.icons8.com/fluent-systems-filled/25/000000/trash.png"/></a>
+            <a href="{% url 'webapp:card_owner' card.pk %}">More</a>
+            </div>
+        </div>     
+        {% endfor %}
+    </div>   
+    {% endblock %}
+</body>
+</html>

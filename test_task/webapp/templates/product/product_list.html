@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+<body>
+    {% block menu %} 
+    {% endblock %}
+    {% block content %}
+    <div class="container">
+    <h1>Product List</h1>
+        {% if not products %}
+            <h2>There is no products that you are looking for</h2>
+        {% else %}
+            {% include "partial/search.html" %}
+        {% endif %}
+        {% for product in products %}
+        <div class="card mb-2" style="width: 18rem;">
+            <div class="card-body mb-2">
+            <h5 class="card-title">Product Name: {{ product.product_name }}</h5>
+            <h6 class="card-subtitle mb-2">{{ product.price }}</h6>
+            <a href="{% url 'webapp:product_delete' product.pk %}"><img src="https://img.icons8.com/fluent-systems-filled/25/000000/trash.png"/></a>
+            <a href="{% url 'webapp:product_detail' product.pk %}">More About Product</a>
+            </div>    
+        </div>
+        {% endfor %}
+        {% include 'partial/pagination.html' %}
+    </div>    
+    {% endblock %}
+</body>
+</html>
